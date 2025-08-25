@@ -23,10 +23,16 @@ public class Handler {
         return serverRequest.bodyToMono(UsuarioDto.class)
                 .flatMap(usuarioMapper::toDomain)
                 .flatMap(usuarioUseCase::crearUsuario)
-                .flatMap(usuarioGuardado-> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(usuarioGuardado));
+                .flatMap(usuarioGuardado ->
+                        usuarioMapper.fromEntityToUsuarioResponseDto(usuarioGuardado)
+                                .flatMap(dto -> ServerResponse.ok()
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(dto))
+                );
+
+    }
+
     }
 
 
-}
+

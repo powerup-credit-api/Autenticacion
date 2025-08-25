@@ -36,14 +36,12 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<Boolean> existeUsuarioPorEmail(String email) {
-        return super.findByExample(Usuario.builder().email(email).build())
-                .hasElements();
+        return repository.existsByEmail(email);
     }
 
     @Override
     public Mono<Boolean> existeUsuarioPorDocumentoIdentidad(String documentoIdentidad) {
-        return super.findByExample(Usuario.builder().documentoIdentidad(documentoIdentidad).build())
-                .hasElements();
+        return repository.existsByDocumentoIdentidad(documentoIdentidad);
     }
 
 
