@@ -2,7 +2,6 @@ package co.crediyacorp.autenticacion.usecase.usuario;
 
 
 import co.crediyacorp.autenticacion.model.usuario.Usuario;
-import co.crediyacorp.autenticacion.model.usuario.gateways.ClaveService;
 import co.crediyacorp.autenticacion.model.usuario.gateways.UsuarioRepository;
 import co.crediyacorp.autenticacion.usecase.usuario.excepciones.ValidationException;
 import lombok.RequiredArgsConstructor;
