@@ -22,8 +22,8 @@ public class UsuarioUseCase {
 
 
 
-    public Mono<Usuario> crearUsuario(Usuario usuario) {
 
+    public Mono<Usuario> crearUsuario(Usuario usuario) {
         return validarCamposVacios(usuario)
                 .then(validarEmailFormato(usuario.getEmail().trim().toLowerCase()))
                 .then(validarEmailUnico(usuario.getEmail()))
@@ -40,8 +40,9 @@ public class UsuarioUseCase {
                 .doOnError(e -> log.severe("Error al crear el usuario: " + e.getMessage()));
     }
 
+
     public Mono<Void> validarEmailUnico(String email){
-        return usuarioRepository.existeUsuarioPorEmail(email).flatMap( existe ->
+        return usuarioRepository.existeUsuarioPorEmail(email.trim().toLowerCase()).flatMap( existe ->
                 Boolean.TRUE.equals(existe) ? Mono.error(new ValidationException("El email ya esta en uso"))
                         : Mono.empty()
         );
