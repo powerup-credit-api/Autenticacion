@@ -1,4 +1,4 @@
-package co.crediyacorp.autenticacion.usecase.usuario;
+package co.crediyacorp.autenticacion.usecase.usuario.usecases;
 
 
 import co.crediyacorp.autenticacion.model.usuario.Usuario;

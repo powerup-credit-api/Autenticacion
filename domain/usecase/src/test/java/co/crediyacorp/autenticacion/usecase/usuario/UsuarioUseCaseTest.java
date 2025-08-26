@@ -4,6 +4,7 @@ package co.crediyacorp.autenticacion.usecase.usuario;
 import co.crediyacorp.autenticacion.model.usuario.Usuario;
 import co.crediyacorp.autenticacion.model.usuario.gateways.UsuarioRepository;
 import co.crediyacorp.autenticacion.usecase.usuario.excepciones.ValidationException;
+import co.crediyacorp.autenticacion.usecase.usuario.usecases.UsuarioUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -7,7 +7,6 @@ import co.crediyacorp.autenticacion.r2dbc.entity.UsuarioEntidad;
 import co.crediyacorp.autenticacion.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 
@@ -19,17 +18,16 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
         UsuarioR2DBCRepository
 > implements UsuarioRepository {
 
-    private final TransactionalOperator transactionalOperator;
 
-    public UsuarioRepositoryAdapter(UsuarioR2DBCRepository repository, ObjectMapper mapper, TransactionalOperator transactionalOperator) {
+
+    public UsuarioRepositoryAdapter(UsuarioR2DBCRepository repository, ObjectMapper mapper) {
         super(repository, mapper, d -> mapper.map(d, Usuario.class));
-        this.transactionalOperator = transactionalOperator;
+
     }
 
     @Override
     public Mono<Usuario> guardarUsuario(Usuario usuario){
-        return super.save(usuario)
-                .as(transactionalOperator::transactional);
+        return super.save(usuario);
 
     }
 

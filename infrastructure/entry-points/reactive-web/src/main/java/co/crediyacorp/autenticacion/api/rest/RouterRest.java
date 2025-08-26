@@ -1,4 +1,4 @@
-package co.crediyacorp.autenticacion.api;
+package co.crediyacorp.autenticacion.api.rest;
 
 import co.crediyacorp.autenticacion.api.config.UsuarioPath;
 import co.crediyacorp.autenticacion.api.dtos.UsuarioDto;
