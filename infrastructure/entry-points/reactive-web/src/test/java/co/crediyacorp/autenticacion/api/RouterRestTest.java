@@ -1,5 +1,7 @@
 package co.crediyacorp.autenticacion.api;
 
+import co.crediyacorp.autenticacion.api.rest.Handler;
+import co.crediyacorp.autenticacion.api.rest.RouterRest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

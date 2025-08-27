@@ -1,8 +1,8 @@
-package co.crediyacorp.autenticacion.api;
+package co.crediyacorp.autenticacion.api.rest;
 
 import co.crediyacorp.autenticacion.api.dtos.UsuarioDto;
 import co.crediyacorp.autenticacion.api.mappers.UsuarioMapper;
-import co.crediyacorp.autenticacion.usecase.usuario.UsuarioUseCase;
+import co.crediyacorp.autenticacion.usecase.usuario.transaction_usecase.ExecuteUsuarioUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class Handler {
 
-    private final UsuarioUseCase usuarioUseCase;
+    private final ExecuteUsuarioUseCase executeUsuarioUseCase;
     private final UsuarioMapper usuarioMapper;
 
 
@@ -22,7 +22,7 @@ public class Handler {
 
         return serverRequest.bodyToMono(UsuarioDto.class)
                 .flatMap(usuarioMapper::toDomain)
-                .flatMap(usuarioUseCase::crearUsuario)
+                .flatMap(executeUsuarioUseCase::executeGuardarUsuario)
                 .flatMap(usuarioGuardado ->
                         usuarioMapper.fromEntityToUsuarioResponseDto(usuarioGuardado)
                                 .flatMap(dto -> ServerResponse.ok()

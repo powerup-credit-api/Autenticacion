@@ -1,7 +1,7 @@
 package co.crediyacorp.autenticacion.api.config;
 
-import co.crediyacorp.autenticacion.api.Handler;
-import co.crediyacorp.autenticacion.api.RouterRest;
+import co.crediyacorp.autenticacion.api.rest.Handler;
+import co.crediyacorp.autenticacion.api.rest.RouterRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
