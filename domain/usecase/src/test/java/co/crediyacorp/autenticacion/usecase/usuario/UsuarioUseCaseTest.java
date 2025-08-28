@@ -61,6 +61,33 @@ class UsuarioUseCaseTest {
                 )
                 .verifyComplete();
     }
+    @Test
+    void validarUsuarioEnDb_deberiaRetornarTrueSiExiste() {
+        String email = "juan@test.com";
+        String documento = "123456789";
+
+        when(usuarioRepository.existeUsuarioPorEmailYDocumentoIdentidad(documento, email))
+                .thenReturn(Mono.just(true));
+
+        StepVerifier.create(usuarioUseCase.validarUsuarioEnDb(email, documento))
+                .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    void validarUsuarioEnDb_deberiaFallarSiNoExiste() {
+        String email = "juan@test.com";
+        String documento = "123456789";
+
+        when(usuarioRepository.existeUsuarioPorEmailYDocumentoIdentidad(documento, email))
+                .thenReturn(Mono.just(false));
+
+        StepVerifier.create(usuarioUseCase.validarUsuarioEnDb(email, documento))
+                .expectErrorMatches(e -> e instanceof ValidationException &&
+                        e.getMessage().equals("El usuario no existe en la base de datos"))
+                .verify();
+    }
+
 
     @Test
     void validarEmailUnico_deberiaFallarSiYaExisteUnDocumento() {

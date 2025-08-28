@@ -42,8 +42,10 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
         return repository.existsByDocumentoIdentidad(documentoIdentidad);
     }
 
-
-
+    @Override
+    public Mono<Boolean> existeUsuarioPorEmailYDocumentoIdentidad(String documentoIdentidad, String email) {
+        return repository.existsByDocumentoIdentidadAndEmail(documentoIdentidad,email);
+    }
 
 
 }

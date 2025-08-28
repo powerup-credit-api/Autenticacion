@@ -40,7 +40,14 @@ public class UsuarioUseCase {
                 .doOnError(e -> log.severe("Error al crear el usuario: " + e.getMessage()));
     }
 
+    public Mono<Boolean> validarUsuarioEnDb(String email, String documentoIdentidad){
+        return usuarioRepository.existeUsuarioPorEmailYDocumentoIdentidad(documentoIdentidad,email)
+                .flatMap(existe -> Boolean.TRUE.equals(existe)
+                        ? Mono.just(true)
+                        : Mono.error(new ValidationException("El usuario no existe en la base de datos"))
+                );
 
+    }
     public Mono<Void> validarEmailUnico(String email){
         return usuarioRepository.existeUsuarioPorEmail(email.trim().toLowerCase()).flatMap( existe ->
                 Boolean.TRUE.equals(existe) ? Mono.error(new ValidationException("El email ya esta en uso"))

@@ -21,6 +21,7 @@ adapters:
 routes:
   paths:
     registrar: "/api/v1/usuarios"
+    validar: "/api/v1/validar"
 
 management:
   endpoints:

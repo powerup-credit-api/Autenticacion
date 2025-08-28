@@ -9,5 +9,7 @@ import reactor.core.publisher.Mono;
 public interface UsuarioR2DBCRepository extends ReactiveCrudRepository<UsuarioEntidad, String>, ReactiveQueryByExampleExecutor<UsuarioEntidad> {
     Mono<Boolean> existsByEmail(String email);
     Mono<Boolean> existsByDocumentoIdentidad(String documentoIdentidad);
+    Mono<Boolean> existsByDocumentoIdentidadAndEmail(String documentoIdentidad, String email);
+
 
 }

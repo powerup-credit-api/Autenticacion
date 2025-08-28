@@ -16,4 +16,8 @@ public class ExecuteUsuarioUseCase {
         return transactionalWrapper.executeInTransaction(usuarioUseCase.crearUsuario(usuario));
     }
 
+    public Mono<Boolean> executeValidarUsuarioEnDb(String email, String documentoIdentidad) {
+        return transactionalWrapper.executeInTransaction(usuarioUseCase.validarUsuarioEnDb(email,documentoIdentidad));
+    }
+
 }
