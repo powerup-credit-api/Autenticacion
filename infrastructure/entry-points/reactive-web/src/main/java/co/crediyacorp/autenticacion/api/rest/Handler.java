@@ -32,7 +32,19 @@ public class Handler {
 
     }
 
-    }
 
+    public Mono<ServerResponse> listenValidarUsuario(ServerRequest request) {
+        String email = request.queryParam("email")
+                .orElseThrow(() -> new IllegalArgumentException("El parámetro 'email' es obligatorio"));
+
+        String documentoIdentidad = request.queryParam("documentoIdentidad")
+                .orElseThrow(() -> new IllegalArgumentException("El parámetro 'documentoIdentidad' es obligatorio"));
+
+        return executeUsuarioUseCase.executeValidarUsuarioEnDb(email, documentoIdentidad)
+                .flatMap(existe -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(existe));
+    }
+}
 
 
