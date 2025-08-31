@@ -21,7 +21,16 @@ adapters:
 routes:
   paths:
     registrar: "/api/v1/usuarios"
+
     validar: "/api/v1/validar"
+
+    login: "/api/v1/login"
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:my-super-secret-key-1234567890abcdef}
+    expiration: ${JWT_EXPIRATION:3600000}
+
 
 management:
   endpoints:

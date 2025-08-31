@@ -9,4 +9,6 @@ import reactor.core.publisher.Mono;
 public interface RolRepository {
 
     Mono<String> obtenerIdRolPorNombre(RolEnum rolEnum);
+
+    Mono<String> obtenerNombreRolPorId(String rolId);
 }

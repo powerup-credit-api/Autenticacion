@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.RouterOperation;
@@ -41,7 +42,7 @@ public class RouterRest {
                                 - nombres, apellidos, correo_electronico y salario_base no pueden ser nulos o vacios.
                                 - correo_electronico debe ser unico en el sistema.
                                 - correo_electronico debe tener formato valido.
-                                - salario_base debe ser numérico entre 0 y 15000000.
+                                - salario_base debe ser numerico entre 0 y 15000000.
                                 """,
                             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                                     required = true,
@@ -52,7 +53,7 @@ public class RouterRest {
                             ),
                             responses = {
                                     @ApiResponse(responseCode = "201", description = "Usuario creado"),
-                                    @ApiResponse(responseCode = "400", description = "Datos inválidos")
+                                    @ApiResponse(responseCode = "400", description = "Datos invalidos")
                             }
                     )
             ),
@@ -64,14 +65,14 @@ public class RouterRest {
                             summary = "Validar existencia de usuario",
                             description = """
                                 Permite validar si existe un usuario en la base de datos
-                                buscando por correo electrónico y documento de identidad.
+                                buscando por correo electronico y documento de identidad.
                                 """,
                             parameters = {
                                     @Parameter(
                                             in = ParameterIn.QUERY,
                                             name = "email",
                                             required = true,
-                                            description = "Correo electrónico del usuario",
+                                            description = "Correo electronico del usuario",
                                             schema = @Schema(type = "string")
                                     ),
                                     @Parameter(
@@ -84,13 +85,61 @@ public class RouterRest {
                             },
                             responses = {
                                     @ApiResponse(responseCode = "200", description = "Devuelve true si existe, false si no"),
-                                    @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
+                                    @ApiResponse(responseCode = "400", description = "Parametros invalidos")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuario/login",
+                    method = RequestMethod.POST,
+                    operation = @Operation(
+                            operationId = "loginUsuario",
+                            summary = "Login de usuario",
+                            description = """
+                    Permite iniciar sesion en la aplicacion con correo electronico y contrasena.
+                    Devuelve un token JWT si las credenciales son correctas.
+                    """,
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    description = "Datos de login del usuario",
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(
+                                                    example = """
+                                        {
+                                            "email":"cristianadmin@example.com",
+                                            "contrasena" : "porDefecto123"
+                                        }
+                                        """
+                                            )
+                                    )
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Login exitoso, devuelve token",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    schema = @Schema(
+                                                            example = """
+                                                {
+                                                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjcmlzdGlhbmFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImQ2ZjM3OGE0LThiMWUtNGYyYS05YzNkLTEyMzQ1Njc4OWFiYyIsImlhdCI6MTc1NjYwMDk1MiwiZXhwIjoxNzU2NjA0NTUyfQ.uA_Cn9rKBY26yEH538T4rNTLBxMb4nLquBG-yvVMrSA",
+                                                    "type": "Bearer"
+                                                }
+                                                """
+                                                    )
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "401", description = "Credenciales invalidas"),
+                                    @ApiResponse(responseCode = "400", description = "Parametros invalidos")
                             }
                     )
             )
+
     })
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(POST(usuarioPath.getRegistrar()), handler::listenRegistrarUsuario)
-                .andRoute(GET(usuarioPath.getValidar()), handler::listenValidarUsuario);
+                .andRoute(GET(usuarioPath.getValidar()), handler::listenValidarUsuario)
+                .andRoute(POST(usuarioPath.getLogin()), handler::listenLoginUsuario);
     }
 }

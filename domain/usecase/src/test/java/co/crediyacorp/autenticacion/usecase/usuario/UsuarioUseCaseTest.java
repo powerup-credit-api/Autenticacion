@@ -1,9 +1,11 @@
 package co.crediyacorp.autenticacion.usecase.usuario;
 
 
+import co.crediyacorp.autenticacion.model.autenticacion.TokenAutenticacionPort;
+import co.crediyacorp.autenticacion.model.excepciones.UsernameNotFoundException;
 import co.crediyacorp.autenticacion.model.usuario.Usuario;
 import co.crediyacorp.autenticacion.model.usuario.gateways.UsuarioRepository;
-import co.crediyacorp.autenticacion.usecase.usuario.excepciones.ValidationException;
+import co.crediyacorp.autenticacion.model.excepciones.ValidationException;
 import co.crediyacorp.autenticacion.usecase.usuario.usecases.UsuarioUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,13 +19,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UsuarioUseCaseTest {
 
     @Mock
     UsuarioRepository usuarioRepository;
+
+    @Mock
+    private TokenAutenticacionPort tokenAutenticacionPort;
 
     @InjectMocks
     UsuarioUseCase usuarioUseCase;
@@ -118,6 +123,56 @@ class UsuarioUseCaseTest {
 
 
 
+    @Test
+    void loguearUsuario_CredencialesValidas_RetornaToken() {
+
+        String email = "usuario@test.com";
+        String contrasena = "password123";
+        String tokenEsperado = "jwt.token.generado";
+
+        when(tokenAutenticacionPort.executeLogin(email, contrasena))
+                .thenReturn(Mono.just(tokenEsperado));
+
+
+        StepVerifier.create(usuarioUseCase.loguearUsuario(email, contrasena))
+                .expectNext(tokenEsperado)
+                .verifyComplete();
+
+        verify(tokenAutenticacionPort).executeLogin(email, contrasena);
+    }
+
+    @Test
+    void loguearUsuario_CredencialesInvalidas_PropagaError() {
+
+        String email = "usuario@test.com";
+        String contrasena = "password-incorrecto";
+
+        when(tokenAutenticacionPort.executeLogin(email, contrasena))
+                .thenReturn(Mono.error(new RuntimeException("Error de autenticacion")));
+
+
+        StepVerifier.create(usuarioUseCase.loguearUsuario(email, contrasena))
+                .expectError(RuntimeException.class)
+                .verify();
+
+        verify(tokenAutenticacionPort).executeLogin(email, contrasena);
+    }
+
+    @Test
+    void loguearUsuario_EmailNulo_RetornaError() {
+        String email = null;
+        String contrasena = "password123";
+
+        // Configurar el mock para que devuelva un error cuando reciba null
+        when(tokenAutenticacionPort.executeLogin(isNull(), anyString()))
+                .thenReturn(Mono.error(new UsernameNotFoundException("Credenciales incorrectas")));
+
+        StepVerifier.create(usuarioUseCase.loguearUsuario(email, contrasena))
+                .expectError(UsernameNotFoundException.class)
+                .verify();
+
+        verify(tokenAutenticacionPort).executeLogin(isNull(), anyString());
+    }
     @Test
     void validarDocumentoIdentidadUnico_deberiaFallarSiYaExisteUnDocumento() {
 

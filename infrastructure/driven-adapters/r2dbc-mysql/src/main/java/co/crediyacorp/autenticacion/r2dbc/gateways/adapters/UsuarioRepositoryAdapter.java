@@ -48,4 +48,13 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
 
+    @Override
+    public Mono<Usuario> buscarUsuarioPorEmail(String email) {
+        return repository.findByEmail(email)
+                .map(this::toEntity);
+    }
+
 }
+
+
+

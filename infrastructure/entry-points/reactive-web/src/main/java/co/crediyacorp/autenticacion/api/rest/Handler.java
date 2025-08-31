@@ -2,6 +2,8 @@ package co.crediyacorp.autenticacion.api.rest;
 
 import co.crediyacorp.autenticacion.api.dtos.UsuarioDto;
 import co.crediyacorp.autenticacion.api.mappers.UsuarioMapper;
+import co.crediyacorp.autenticacion.seguridad.dtos.AuthResponse;
+import co.crediyacorp.autenticacion.seguridad.dtos.LoginRequest;
 import co.crediyacorp.autenticacion.usecase.usuario.transaction_usecase.ExecuteUsuarioUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -45,6 +47,15 @@ public class Handler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(existe));
     }
+
+    public Mono<ServerResponse> listenLoginUsuario(ServerRequest request) {
+
+        return request.bodyToMono(LoginRequest.class)
+                .flatMap(dto -> executeUsuarioUseCase.executeloguearUsuario(dto.email(), dto.contrasena()))
+                .map(token -> new AuthResponse(token, "Bearer"))
+                .flatMap(authResponse -> ServerResponse.ok().bodyValue(authResponse));
+    }
+
 }
 
 
