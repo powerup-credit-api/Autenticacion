@@ -15,4 +15,6 @@ public interface RolR2DBCRepository extends ReactiveCrudRepository<RolEntidad, S
     @Query("SELECT id_rol FROM rol WHERE nombre = :nombre")
     Mono<String> findIdByNombre(String nombre);
 
+    Mono<String> findNombreByIdRol(String id);
+
 }

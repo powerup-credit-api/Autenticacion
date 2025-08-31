@@ -20,4 +20,8 @@ public class ExecuteUsuarioUseCase {
         return transactionalWrapper.executeInTransaction(usuarioUseCase.validarUsuarioEnDb(email,documentoIdentidad));
     }
 
+    public Mono<String> executeloguearUsuario(String email, String contrasena) {
+        return transactionalWrapper.executeInTransaction(usuarioUseCase.loguearUsuario(email,contrasena));
+    }
+
 }

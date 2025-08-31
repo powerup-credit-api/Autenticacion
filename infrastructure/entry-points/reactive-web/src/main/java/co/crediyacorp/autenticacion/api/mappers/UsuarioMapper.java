@@ -26,7 +26,7 @@ public class UsuarioMapper {
 
     public Mono<Usuario> toDomain(UsuarioDto usuarioDto) {
         return rolRepository.obtenerIdRolPorNombre(RolEnum.valueOf(usuarioDto.rol()))
-                .zipWith(claveService.generarClaveEncriptada())
+                .zipWith(claveService.encriptarClave("porDefecto123"))
                 .map(tupla -> Usuario.builder()
                         .nombres(usuarioDto.nombres())
                         .apellidos(usuarioDto.apellidos())

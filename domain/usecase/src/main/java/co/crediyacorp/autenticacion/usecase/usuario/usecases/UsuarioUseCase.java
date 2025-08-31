@@ -1,9 +1,10 @@
 package co.crediyacorp.autenticacion.usecase.usuario.usecases;
 
 
+import co.crediyacorp.autenticacion.model.autenticacion.TokenAutenticacionPort;
 import co.crediyacorp.autenticacion.model.usuario.Usuario;
 import co.crediyacorp.autenticacion.model.usuario.gateways.UsuarioRepository;
-import co.crediyacorp.autenticacion.usecase.usuario.excepciones.ValidationException;
+import co.crediyacorp.autenticacion.model.excepciones.ValidationException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -20,6 +21,7 @@ public class UsuarioUseCase {
 
     private final UsuarioRepository usuarioRepository;
 
+    private final TokenAutenticacionPort tokenAutenticacionPort;
 
 
 
@@ -48,6 +50,16 @@ public class UsuarioUseCase {
                 );
 
     }
+
+    public Mono<String> loguearUsuario(String email, String contrasena){
+        return tokenAutenticacionPort.executeLogin(email,contrasena)
+                .doOnSuccess(token -> log.info("Usuario logueado correctamente con email " + email))
+                .doOnError(e -> log.severe("Error al loguear el usuario: " + e.getMessage()));
+    }
+
+
+
+
     public Mono<Void> validarEmailUnico(String email){
         return usuarioRepository.existeUsuarioPorEmail(email.trim().toLowerCase()).flatMap( existe ->
                 Boolean.TRUE.equals(existe) ? Mono.error(new ValidationException("El email ya esta en uso"))
@@ -70,11 +82,13 @@ public class UsuarioUseCase {
         );
     }
 
+
+
     public Mono<Void> validarEmailFormato(String email) {
         return Mono.just(email)
                 .flatMap(e -> e.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
                         ? Mono.empty()
-                        : Mono.error(new ValidationException("Email inválido")));
+                        : Mono.error(new ValidationException("Email invalido")));
     }
 
     public Mono<Void> validarCamposVacios(Usuario usuario) {

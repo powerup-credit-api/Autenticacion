@@ -14,4 +14,5 @@ public interface UsuarioRepository {
     Mono<Boolean> existeUsuarioPorEmailYDocumentoIdentidad(String documentoIdentidad, String email);
 
 
+    Mono<Usuario> buscarUsuarioPorEmail(String idUsuario);
 }

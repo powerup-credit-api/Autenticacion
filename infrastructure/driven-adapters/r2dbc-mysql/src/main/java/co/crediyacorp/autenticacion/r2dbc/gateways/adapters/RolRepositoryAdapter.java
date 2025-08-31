@@ -29,4 +29,10 @@ public class RolRepositoryAdapter extends ReactiveAdapterOperations<
         return repository.findIdByNombre(rolEnum.name());
 
     }
+
+    @Override
+    public Mono<String> obtenerNombreRolPorId(String rolId) {
+        return repository.findNombreByIdRol(rolId);
+
+    }
 }
