@@ -1,4 +1,4 @@
-package co.crediyacorp.autenticacion.seguridad.adapters;
+package co.crediyacorp.autenticacion.seguridad.adapters.registro;
 
 import co.crediyacorp.autenticacion.model.usuario.gateways.ClaveService;
 import lombok.RequiredArgsConstructor;

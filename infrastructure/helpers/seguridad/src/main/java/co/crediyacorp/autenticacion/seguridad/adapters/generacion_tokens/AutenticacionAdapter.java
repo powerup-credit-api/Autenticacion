@@ -1,4 +1,4 @@
-package co.crediyacorp.autenticacion.seguridad.adapters;
+package co.crediyacorp.autenticacion.seguridad.adapters.generacion_tokens;
 
 import co.crediyacorp.autenticacion.model.excepciones.BadCredentialsCustomException;
 import co.crediyacorp.autenticacion.seguridad.ports.AutenticacionPort;
