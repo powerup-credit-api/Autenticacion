@@ -2,6 +2,7 @@ package co.crediyacorp.autenticacion.r2dbc.gateways.ports;
 
 import co.crediyacorp.autenticacion.r2dbc.entity.RolEntidad;
 
+
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -15,6 +16,8 @@ public interface RolR2DBCRepository extends ReactiveCrudRepository<RolEntidad, S
     @Query("SELECT id_rol FROM rol WHERE nombre = :nombre")
     Mono<String> findIdByNombre(String nombre);
 
+    @Query("SELECT nombre FROM rol WHERE id_rol = :id")
     Mono<String> findNombreByIdRol(String id);
+
 
 }

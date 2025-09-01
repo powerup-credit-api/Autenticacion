@@ -1,4 +1,4 @@
-package co.crediyacorp.autenticacion.seguridad.adapters;
+package co.crediyacorp.autenticacion.seguridad.adapters.generacion_tokens;
 
 import co.crediyacorp.autenticacion.model.excepciones.UsernameNotFoundException;
 import co.crediyacorp.autenticacion.model.usuario.gateways.UsuarioRepository;
