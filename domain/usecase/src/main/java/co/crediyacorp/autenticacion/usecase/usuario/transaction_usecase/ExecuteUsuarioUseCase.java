@@ -4,6 +4,7 @@ import co.crediyacorp.autenticacion.model.transactions.TransactionalWrapper;
 import co.crediyacorp.autenticacion.model.usuario.Usuario;
 import co.crediyacorp.autenticacion.usecase.usuario.usecases.UsuarioUseCase;
 import lombok.RequiredArgsConstructor;
+
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -23,5 +24,6 @@ public class ExecuteUsuarioUseCase {
     public Mono<String> executeloguearUsuario(String email, String contrasena) {
         return transactionalWrapper.executeInTransaction(usuarioUseCase.loguearUsuario(email,contrasena));
     }
+
 
 }

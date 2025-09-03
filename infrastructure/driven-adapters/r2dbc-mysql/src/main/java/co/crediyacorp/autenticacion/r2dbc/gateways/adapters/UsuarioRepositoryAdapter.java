@@ -9,6 +9,8 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 
 @Repository
 public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
@@ -52,6 +54,11 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Usuario> buscarUsuarioPorEmail(String email) {
         return repository.findByEmail(email)
                 .map(this::toEntity);
+    }
+
+    @Override
+    public Mono<BigDecimal> obtenerSalarioBasePorEmail(String email) {
+        return repository.findSalarioBaseByEmail(email);
     }
 
 }
