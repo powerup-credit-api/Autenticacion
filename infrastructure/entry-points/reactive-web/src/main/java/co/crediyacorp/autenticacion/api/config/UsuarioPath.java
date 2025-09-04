@@ -12,4 +12,5 @@ public class UsuarioPath {
     private String registrar;
     private String validar;
     private String login;
+    private String salario;
 }

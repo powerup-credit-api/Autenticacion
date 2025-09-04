@@ -26,6 +26,8 @@ routes:
 
     login: "/api/v1/login"
 
+    salario: "/api/v1/salario"
+
 security:
   jwt:
     secret: ${JWT_SECRET:my-super-secret-key-1234567890abcdef}

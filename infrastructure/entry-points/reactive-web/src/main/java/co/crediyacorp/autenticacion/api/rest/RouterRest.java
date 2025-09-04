@@ -5,6 +5,7 @@ import co.crediyacorp.autenticacion.api.dtos.UsuarioDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -134,12 +135,46 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "400", description = "Parametros invalidos")
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuario/salario",
+                    method = RequestMethod.POST,
+                    operation = @Operation(
+                            operationId = "obtenerSalariosBasePorEmails",
+                            summary = "Obtener salarios base por lista de correos",
+                            description = """
+                    Recibe una lista de correos electronicos en el cuerpo de la peticion
+                    y devuelve una lista de salarios base (BigDecimal) en el mismo orden.
+                    """,
+                            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                    required = true,
+                                    description = "Lista de correos electronicos",
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(type = "string", example = "usuario@example.com"))
+                                    )
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Lista de salarios base devuelta en el mismo orden que los correos enviados",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    array = @ArraySchema(schema = @Schema(type = "number", format = "bigdecimal", example = "4500000.00"))
+                                            )
+                                    ),
+                                    @ApiResponse(responseCode = "400", description = "Lista de correos invalida"),
+                                    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+                            }
+                    )
             )
+
 
     })
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(POST(usuarioPath.getRegistrar()), handler::listenRegistrarUsuario)
                 .andRoute(GET(usuarioPath.getValidar()), handler::listenValidarUsuario)
-                .andRoute(POST(usuarioPath.getLogin()), handler::listenLoginUsuario);
+                .andRoute(POST(usuarioPath.getLogin()), handler::listenLoginUsuario)
+                .andRoute(POST(usuarioPath.getSalario()), handler::listenObtenerSalariosBasePorEmails);
     }
 }

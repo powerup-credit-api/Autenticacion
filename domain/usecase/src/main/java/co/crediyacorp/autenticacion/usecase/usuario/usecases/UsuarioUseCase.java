@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Log
@@ -40,6 +41,12 @@ public class UsuarioUseCase {
                 .flatMap(usuarioRepository::guardarUsuario)
                 .doOnSuccess(u -> log.info("Usuario guardado correctamente con ID " + u.getIdUsuario()))
                 .doOnError(e -> log.severe("Error al crear el usuario: " + e.getMessage()));
+    }
+
+    public Flux<BigDecimal> obtenerSalariosBasePorEmails(List<String> email){
+        return Flux.fromIterable(email)
+                .flatMapSequential(usuarioRepository::obtenerSalarioBasePorEmail)
+                .switchIfEmpty(Mono.error(new ValidationException("El usuario no existe en la base de datos")));
     }
 
     public Mono<Boolean> validarUsuarioEnDb(String email, String documentoIdentidad){

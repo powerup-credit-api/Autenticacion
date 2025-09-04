@@ -17,6 +17,7 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -65,6 +66,25 @@ class UsuarioUseCaseTest {
                                 u.getSalarioBase().equals(new BigDecimal("5000"))
                 )
                 .verifyComplete();
+    }
+
+
+    @Test
+    void obtenerSalariosBasePorEmails_deberiaRetornarSalariosCorrectos() {
+        List<String> emails = List.of("juan@test.com", "ana@test.com");
+        BigDecimal salarioJuan = new BigDecimal("5000");
+        BigDecimal salarioAna = new BigDecimal("7000");
+
+        when(usuarioRepository.obtenerSalarioBasePorEmail("juan@test.com")).thenReturn(Mono.just(salarioJuan));
+        when(usuarioRepository.obtenerSalarioBasePorEmail("ana@test.com")).thenReturn(Mono.just(salarioAna));
+
+        StepVerifier.create(usuarioUseCase.obtenerSalariosBasePorEmails(emails))
+                .expectNext(salarioJuan)
+                .expectNext(salarioAna)
+                .verifyComplete();
+
+        verify(usuarioRepository).obtenerSalarioBasePorEmail("juan@test.com");
+        verify(usuarioRepository).obtenerSalarioBasePorEmail("ana@test.com");
     }
     @Test
     void validarUsuarioEnDb_deberiaRetornarTrueSiExiste() {
@@ -160,14 +180,14 @@ class UsuarioUseCaseTest {
 
     @Test
     void loguearUsuario_EmailNulo_RetornaError() {
-        String email = null;
+
         String contrasena = "password123";
 
-        // Configurar el mock para que devuelva un error cuando reciba null
+
         when(tokenAutenticacionPort.executeLogin(isNull(), anyString()))
                 .thenReturn(Mono.error(new UsernameNotFoundException("Credenciales incorrectas")));
 
-        StepVerifier.create(usuarioUseCase.loguearUsuario(email, contrasena))
+        StepVerifier.create(usuarioUseCase.loguearUsuario(null, contrasena))
                 .expectError(UsernameNotFoundException.class)
                 .verify();
 
@@ -226,7 +246,7 @@ class UsuarioUseCaseTest {
     void validarEmailFormato_deberiaFallarSiFormatoEsInvalido() {
         StepVerifier.create(usuarioUseCase.validarEmailFormato("correo-invalido"))
                 .expectErrorMatches(e -> e instanceof ValidationException &&
-                        e.getMessage().equals("Email inválido"))
+                        e.getMessage().equals("Email invalido"))
                 .verify();
     }
 
