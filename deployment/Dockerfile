@@ -32,9 +32,10 @@ RUN ./gradlew :app-service:bootJar --no-daemon -x test
 
 FROM eclipse-temurin:21-jre-alpine
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup -h /app \
+
+RUN adduser -D -h /app appuser \
  && mkdir -p /app/cache /tmp \
- && chown -R appuser:appgroup /app /tmp
+ && chown -R appuser:appuser /app /tmp
 
 
 WORKDIR /app
