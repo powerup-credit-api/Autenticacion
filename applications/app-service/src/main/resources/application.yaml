@@ -44,7 +44,9 @@ management:
       probes:
         enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins:
+  - "http://localhost:4200"
+  - ${GATEWAY:http://localhost:8080}
 springdoc:
   swagger-ui:
     url: /v3/api-docs
