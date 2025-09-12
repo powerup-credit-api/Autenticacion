@@ -46,6 +46,11 @@ public class UsuarioUseCase {
     public Flux<BigDecimal> obtenerSalariosBasePorEmails(List<String> email){
         return Flux.fromIterable(email)
                 .flatMapSequential(usuarioRepository::obtenerSalarioBasePorEmail)
+                .switchIfEmpty(Mono.error(new ValidationException("El usuario no existe en la base de datos.")));
+    }
+
+    public Mono<BigDecimal> obtenerSalarioBasePorEmail(String email){
+        return usuarioRepository.obtenerSalarioBasePorEmail(email)
                 .switchIfEmpty(Mono.error(new ValidationException("El usuario no existe en la base de datos")));
     }
 
