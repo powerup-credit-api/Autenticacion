@@ -65,6 +65,16 @@ public class Handler {
                         .bodyValue(salarios));
     }
 
+    public Mono<ServerResponse> listenObtenerSalarioBasePorEmail(ServerRequest request) {
+        String email = request.queryParam("email")
+                .orElseThrow(() -> new IllegalArgumentException("El parámetro 'email' es obligatorio"));
+
+        return usuarioUseCase.obtenerSalarioBasePorEmail(email)
+                .flatMap(salario -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(salario));
+    }
+
 
     public Mono<ServerResponse> listenLoginUsuario(ServerRequest request) {
 

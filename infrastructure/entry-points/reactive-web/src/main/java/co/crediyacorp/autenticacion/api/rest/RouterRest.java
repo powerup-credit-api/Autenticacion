@@ -168,6 +168,38 @@ public class RouterRest {
                             }
                     )
             )
+            , @RouterOperation(
+            path = "/api/v1/salario",
+            method = RequestMethod.GET,
+            operation = @Operation(
+                    operationId = "obtenerSalarioBasePorEmail",
+                    summary = "Obtener salario base de usuario",
+                    description = "Permite obtener el salario base de un usuario a partir de su correo electrónico.",
+                    parameters = {
+                            @Parameter(
+                                    name = "email",
+                                    description = "Correo electrónico del usuario",
+                                    required = true,
+                                    example = "cristianmanuel2304@gmail.com"
+                            )
+                    },
+                    responses = {
+                            @ApiResponse(
+                                    responseCode = "200",
+                                    description = "Salario base obtenido correctamente",
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(
+                                                    example = "2500.00"
+                                            )
+                                    )
+                            ),
+                            @ApiResponse(responseCode = "400", description = "El parámetro 'email' es obligatorio"),
+                            @ApiResponse(responseCode = "404", description = "El usuario no existe en la base de datos")
+                    }
+            )
+    )
+
 
 
     })
@@ -175,6 +207,7 @@ public class RouterRest {
         return route(POST(usuarioPath.getRegistrar()), handler::listenRegistrarUsuario)
                 .andRoute(GET(usuarioPath.getValidar()), handler::listenValidarUsuario)
                 .andRoute(POST(usuarioPath.getLogin()), handler::listenLoginUsuario)
-                .andRoute(POST(usuarioPath.getSalario()), handler::listenObtenerSalariosBasePorEmails);
+                .andRoute(POST(usuarioPath.getSalario()), handler::listenObtenerSalariosBasePorEmails)
+                .andRoute(GET(usuarioPath.getSalario()), handler::listenObtenerSalarioBasePorEmail);
     }
 }

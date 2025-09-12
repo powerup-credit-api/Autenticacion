@@ -305,4 +305,38 @@ class UsuarioUseCaseTest {
                 .verifyComplete();
     }
 
+    @Test
+    void obtenerSalarioBasePorEmail_debeRetornarSalarioCuandoUsuarioExiste() {
+
+        String email = "test@correo.com";
+        BigDecimal salarioEsperado = new BigDecimal("2500.00");
+        when(usuarioRepository.obtenerSalarioBasePorEmail(email))
+                .thenReturn(Mono.just(salarioEsperado));
+
+
+        Mono<BigDecimal> resultado = usuarioUseCase.obtenerSalarioBasePorEmail(email);
+
+        StepVerifier.create(resultado)
+                .expectNext(salarioEsperado)
+                .verifyComplete();
+    }
+
+    @Test
+    void obtenerSalarioBasePorEmail_debeRetornarErrorCuandoUsuarioNoExiste() {
+        String email = "noexiste@correo.com";
+        when(usuarioRepository.obtenerSalarioBasePorEmail(email))
+                .thenReturn(Mono.empty());
+
+
+        Mono<BigDecimal> resultado = usuarioUseCase.obtenerSalarioBasePorEmail(email);
+
+
+        StepVerifier.create(resultado)
+                .expectErrorMatches(error -> error instanceof ValidationException &&
+                        error.getMessage().equals("El usuario no existe en la base de datos"))
+                .verify();
+    }
+
+
+
 }
