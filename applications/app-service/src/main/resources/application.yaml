@@ -26,6 +26,7 @@ routes:
 
     login: "/api/v1/login"
 
+
     salario: "/api/v1/salario"
 
 security:
@@ -43,6 +44,11 @@ management:
     health:
       probes:
         enabled: true
+  health:
+    db:
+      enabled: false
+    r2dbc:
+      enabled: false
 cors:
   allowed-origins:
 
