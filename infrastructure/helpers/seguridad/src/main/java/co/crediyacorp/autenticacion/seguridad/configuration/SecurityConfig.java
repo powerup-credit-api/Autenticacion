@@ -38,7 +38,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-ui/index.html",
-                                "/api/v1/salario"
+                                "/api/v1/salario",
+                                "/actuator/health"
                         ).permitAll()
                         .pathMatchers("/api/v1/usuarios").hasRole("ADMINISTRADOR")
                         .anyExchange().authenticated()
