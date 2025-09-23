@@ -1,7 +1,5 @@
 package co.crediyacorp.autenticacion.seguridad.configuration;
 
-import co.crediyacorp.autenticacion.seguridad.adapters.validacion.HeaderAutenticacionConverter;
-import co.crediyacorp.autenticacion.seguridad.adapters.validacion.HeaderReactiveAuthenticacionManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -25,28 +22,29 @@ public class SecurityConfig {
 
 
     private final ReactiveUserDetailsService userDetailsService;
+    private static final String ADMIN_ROLE = "ADMINISTRADOR";
 
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, AuthenticationWebFilter headerAuthFilter) {
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, AuthenticationWebFilter jwtAuthWebFilter ) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(auth -> auth
                         .pathMatchers("/api/v1/login",
-                                "/api/v1/validar",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-ui/index.html",
-                                "/api/v1/salario",
                                 "/actuator/health"
                         ).permitAll()
-                        .pathMatchers("/api/v1/usuarios").hasRole("ADMINISTRADOR")
+                        .pathMatchers("/api/v1/usuarios").hasRole(ADMIN_ROLE)
+                        .pathMatchers("/api/v1/salario").hasRole(ADMIN_ROLE)
+                        .pathMatchers("/api/v1/validar").hasRole(ADMIN_ROLE)
                         .anyExchange().authenticated()
                 )
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .addFilterAt(headerAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAt(jwtAuthWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 
@@ -57,16 +55,6 @@ public class SecurityConfig {
                 new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
         authManager.setPasswordEncoder(passwordEncoder);
         return authManager;
-    }
-
-    @Bean("headerReactiveAuthenticationManager")
-    public ReactiveAuthenticationManager headerReactiveAuthenticationManager() {
-        return new HeaderReactiveAuthenticacionManager();
-    }
-
-    @Bean
-    public ServerAuthenticationConverter headerAuthenticationConverter() {
-        return new HeaderAutenticacionConverter();
     }
 
 
